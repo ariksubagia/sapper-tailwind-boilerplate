@@ -8,4 +8,4 @@ npm run dev
 
 ### Editing css file
 
-you can edit `./src/assets/global.css` to add custom css, it will be compiled to ./static/global.css
+you can edit `./src/assets/global.css` to add custom css, it will be compiled to `./static/global.css`
