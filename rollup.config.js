@@ -8,6 +8,7 @@ import babel from '@rollup/plugin-babel';
 import { terser } from 'rollup-plugin-terser';
 import config from 'sapper/config/rollup.js';
 import pkg from './package.json';
+import alias from '@rollup/plugin-alias';
 
 const { preprocess } = require('./svelte.config');
 
@@ -20,11 +21,19 @@ const onwarn = (warning, onwarn) =>
 	(warning.code === 'CIRCULAR_DEPENDENCY' && /[/\\]@sapper[/\\]/.test(warning.message)) ||
 	onwarn(warning);
 
+const aliases = alias({
+	resolve: ['.svelte', '.js'], //optional, by default this will just look for .js files or folders
+	entries: [
+		{ find: 'components', replacement: 'src/components' }
+	]
+});
+
 export default {
 	client: {
 		input: config.client.input(),
 		output: config.client.output(),
 		plugins: [
+			aliases,
 			replace({
 				'process.browser': true,
 				'process.env.NODE_ENV': JSON.stringify(mode)
@@ -75,6 +84,7 @@ export default {
 		input: config.server.input(),
 		output: config.server.output(),
 		plugins: [
+			aliases,
 			replace({
 				'process.browser': false,
 				'process.env.NODE_ENV': JSON.stringify(mode)
@@ -105,6 +115,7 @@ export default {
 		input: config.serviceworker.input(),
 		output: config.serviceworker.output(),
 		plugins: [
+			aliases,
 			resolve(),
 			replace({
 				'process.browser': true,
